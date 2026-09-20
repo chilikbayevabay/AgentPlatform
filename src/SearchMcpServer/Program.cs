@@ -1,0 +1,10 @@
+using SearchMcpServer;
+using ServiceDefaults;
+var builder = WebApplication.CreateBuilder(args);
+builder.AddServiceDefaults();
+builder.Services.AddMcpServer().WithHttpTransport().WithTools<SearchTools>();
+var app = builder.Build();
+app.MapDefaultEndpoints();
+app.MapMcp("/mcp");
+app.MapGet("/", () => Results.Ok(new { service = "SearchMcpServer", transport = "streamable-http" }));
+app.Run();

@@ -1,0 +1,13 @@
+using A2A;
+using A2A.AspNetCore;
+using DocumentAgent;
+using ServiceDefaults;
+var builder = WebApplication.CreateBuilder(args);
+builder.AddServiceDefaults();
+var card = new AgentCard { Name = "DocumentAgent", Description = "Receives a profile and returns a PDF extraction stub.", Version = "1.0.0", SupportedInterfaces = [new AgentInterface { Url = "/a2a", ProtocolBinding = "HTTP+JSON", ProtocolVersion = "1.0" }], DefaultInputModes = ["text/plain"], DefaultOutputModes = ["text/plain"] };
+builder.Services.AddA2AAgent<AgentHandler>(card);
+var app = builder.Build();
+app.MapDefaultEndpoints();
+app.MapA2A("/a2a");
+app.MapGet("/.well-known/agent-card.json", () => Results.Ok(card));
+app.Run();
